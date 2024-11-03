@@ -11,24 +11,9 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: [true, 'Password is required'],
-        minlength: [6, 'Password must be at least 6 characters long']
-    },
-    confirmPassword: {
-        type: String,
-        required: [true, 'Please confirm your password'],
-        validate: {
-            validator: function(value) {
-                return value === this.password;
-            },
-            message: 'Passwords do not match'
-        }
+        minlength: [8, 'Password must be at least 8 characters long'] // Increased length of the password(see PR)
+        return next(error); //  Just a simple hashing error handling
     }
-});
-
-userSchema.pre('save', async function(next) {
-    if(!this.isModified('password')) return next();
-    this.password = await bcrypt.hash(this.password, 12);
-    this.confirmPassword = undefined;
     next();
 });
 
